@@ -1,6 +1,7 @@
 // app/layout.tsx
+import "../styles/globals.css"; // or "@/styles/globals.css"
+
 import type { Metadata } from "next";
-// Import the client Providers component
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
@@ -8,11 +9,14 @@ export const metadata: Metadata = {
   description: "...",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
-        {/* Wrap all pages/routes with SessionProvider */}
         <Providers>{children}</Providers>
       </body>
     </html>
