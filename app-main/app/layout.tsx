@@ -24,12 +24,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${jetbrainsMono.variable}`}>
-      {/* Note: We do NOT forcibly add "dark" class here by default. 
-          We'll rely on the user's saved setting or system preference 
-          toggled in the Footer. */}
       <body
         className="
           font-mono 
+          flex flex-col min-h-screen
           bg-tnLight-bg 
           text-tnLight-text 
           dark:bg-tnStorm-bg 
@@ -38,7 +36,8 @@ export default function RootLayout({
       >
         <Providers>
           <Header />
-          <main className="min-h-screen">{children}</main>
+          {/* This main flex-1 (or flex-grow) will push the footer to the bottom */}
+          <main className="flex-1">{children}</main>
           <Footer />
         </Providers>
       </body>

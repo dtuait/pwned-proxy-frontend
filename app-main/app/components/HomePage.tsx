@@ -7,16 +7,13 @@ export default function HomePage() {
   const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
 
-  // Sign out handler
   const handleSignOut = async () => {
     await signOut({
       callbackUrl: `https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`,
     });
-
     window.location.href = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`;
   };
 
-  // "Have I Been Pwned?" click handler
   const handleClick = () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
@@ -29,14 +26,20 @@ export default function HomePage() {
   return (
     <main
       className="
-        flex flex-col items-center justify-center
-        min-h-screen w-full px-4
-        bg-tnLight-bg text-tnLight-text
-        dark:bg-tnStorm-bg dark:text-tnStorm-text
+        flex-1              /* fills remaining vertical space after Header, before Footer */
+        flex
+        flex-col
+        items-center
+        justify-center
+        w-full
+        px-4
+        bg-tnLight-bg
+        text-tnLight-text
+        dark:bg-tnStorm-bg
+        dark:text-tnStorm-text
         text-center
       "
     >
-      {/* Page Title */}
       <h1
         className="
           text-4xl font-bold mb-2
@@ -51,7 +54,7 @@ export default function HomePage() {
         Check if your email address is in a data breach
       </p>
 
-      {/* NextAuth session status */}
+      {/* Session info */}
       <div className="mt-8">
         {status === "loading" && <p className="mb-2">Loading session...</p>}
 
