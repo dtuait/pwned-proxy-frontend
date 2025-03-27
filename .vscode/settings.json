@@ -1,3 +1,8 @@
 {
-    "workbench.colorTheme": "Tomorrow Night Blue"
+    "workbench.colorTheme": "Tomorrow Night Blue",
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#223034",
+      "titleBar.activeBackground": "#2F4349",
+      "titleBar.activeForeground": "#F9FBFB"
+    }
   }
