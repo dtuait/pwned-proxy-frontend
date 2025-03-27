@@ -12,7 +12,6 @@ export default function Header() {
       callbackUrl: `https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`,
     });
 
-    // sign out from Azure AD if needed
     window.location.href = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`;
   };
 
@@ -25,19 +24,22 @@ export default function Header() {
         justify-between 
         p-4 
         border-b 
-        bg-white 
-        dark:bg-tnStormBg 
-        dark:border-tnStormAccent3
+        bg-tnLight-bg
+        border-tnLight-border
+        dark:bg-tnStorm-bg 
+        dark:border-tnStorm-border
       "
     >
       {/* Left side: site logo or title */}
       <Link href="/">
-        <h1 className="text-lg font-bold dark:text-tnStormFg">My Next.js App</h1>
+        <h1 className="text-lg font-bold text-tnLight-accent dark:text-tnStorm-accent">
+          Deic HaveIBeenPwned
+        </h1>
       </Link>
 
       {/* Right side: sign in or user avatar */}
       <div>
-        {status === "loading" && <span>Loading...</span>}
+        {status === "loading" && <span className="text-sm">Loading...</span>}
 
         {session?.user ? (
           <div className="flex items-center space-x-4">
@@ -49,13 +51,13 @@ export default function Header() {
         ) : (
           <button
             className="
-              bg-deicBlue 
-              text-white 
-              px-3 
-              py-1 
-              rounded
-              dark:bg-tnStormAccent1
+              bg-deic-green
+              text-black
+              px-3 py-1
+              rounded-sm
               hover:opacity-90
+              dark:bg-deic-green
+              dark:text-black
             "
             onClick={() => signIn("azure-ad")}
           >
