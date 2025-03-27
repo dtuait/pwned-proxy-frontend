@@ -1,7 +1,93 @@
+/* globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* 
+  ========== 
+  Base styling 
+  ==========
+*/
+
+/* Light mode default (DEIC-inspired) */
+:root {
+  --color-bg: #ffffff;          /* main background */
+  --color-bg-alt: #f5f5f5;      /* slightly gray background */
+  --color-text: #00254f;        /* dark navy text (DKCERT styling) */
+  --color-accent: #0053a4;      /* blue accent */
+  --color-highlight: #f47c20;   /* orange accent (DKCERT) */
+  --color-border: #e3e3e3;
+}
+
 body {
-    color: antiquewhite;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Example to demonstrate your "antiquewhite" preference or other overrides */
+body {
+  color: antiquewhite; /* You said you liked antiquewhite, but feel free to override. */
+}
+
+/* 
+  Headings, paragraphs, etc. 
+  (Optional: you might rely on tailwind classes for this, or do your own)
+*/
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/*
+  Any global link styles 
+*/
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+
+/* 
+  ========== 
+  Dark Mode (Tokyo Night Storm) 
+  ==========
+
+  We’ll assume you enable dark mode by toggling a .dark class on <html> or <body>. 
+  If using tailwind’s built-in 'class' strategy, you just put `.dark :root { ... }`. 
+*/
+
+.dark {
+  /* Reassign all CSS variables for the "Tokyo Night Storm" palette */
+  --color-bg: #24283b;       /* near-black / deep navy */
+  --color-bg-alt: #2a2e42;
+  --color-text: #c0caf5;     /* main text color: light grayish-blue */
+  --color-accent: #7aa2f7;   /* accent: teal/blue */
+  --color-highlight: #bb9af7;/* accent: purple/pink */
+  --color-border: #414868;
+}
+
+.dark body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/*
+  If you want to override tailwind classes in dark mode, 
+  you can do so with .dark .bg-white { background-color: var(--color-bg) }
+  or rely on tailwind's built-in 'dark:' variants 
+  (like 'dark:bg-tnStormBg' if you extended tailwind config).
+*/
+
+/*
+  Example: Make 'antiquewhite' used in light mode become a different color in dark mode
+*/
+.dark body {
+  color: var(--color-text); /* override 'antiquewhite' to TokyoNight color */
 }
