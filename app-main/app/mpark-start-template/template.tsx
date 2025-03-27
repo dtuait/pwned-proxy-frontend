@@ -1,28 +1,12 @@
-"use client";
+import React, { useState } from 'react';
 
-import React, { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+export default function Home() {
+  const [email, setEmail] = useState('');
 
-export default function HomePage() {
-  const { data: session, status } = useSession();
-  const [email, setEmail] = useState("");
-
-  // Sign out handler
-  const handleSignOut = async () => {
-    // First sign out locally from NextAuth
-    await signOut({
-      callbackUrl: `https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`, // e.g. your app's domain
-    });
-
-    // Then redirect to Azure AD logout endpoint
-    window.location.href = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`;
-  };
-
-  // "Have I Been Pwned?" click handler
   const handleClick = () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
-      alert("Please enter an email address!");
+      alert('Please enter an email address!');
       return;
     }
     alert(`You entered: ${trimmedEmail}`);
@@ -30,13 +14,12 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Global styles */}
       <style jsx global>{`
         html,
         body {
           margin: 0;
           padding: 0;
-          font-family: "Arial", sans-serif;
+          font-family: 'Arial', sans-serif;
           height: 100%;
           width: 100%;
           background: #f7f7f7; /* Light gray background */
@@ -45,7 +28,6 @@ export default function HomePage() {
         }
       `}</style>
 
-      {/* Scoped styles for this page */}
       <style jsx>{`
         .container {
           display: flex;
@@ -79,7 +61,6 @@ export default function HomePage() {
           max-width: 400px;
           width: 100%;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-          margin-top: 2rem;
         }
 
         .search-box input {
@@ -105,14 +86,6 @@ export default function HomePage() {
           background-color: #660000; /* Darker DTU red */
         }
 
-        .session-info {
-          margin-top: 2rem;
-        }
-
-        .session-info p {
-          margin: 0.5rem 0;
-        }
-
         @media (max-width: 500px) {
           .title {
             font-size: 2rem;
@@ -125,27 +98,7 @@ export default function HomePage() {
 
       <div className="container">
         <h1 className="title">';-- have i been pwned?</h1>
-        <p className="subtitle">
-          Check if your email address is in a data breach
-        </p>
-
-        {/* NextAuth session status */}
-        <div className="session-info">
-          {status === "loading" && <p>Loading session...</p>}
-          {session ? (
-            <>
-              <p>Signed in as {session.user?.email}</p>
-              <button onClick={handleSignOut}>Sign out</button>
-            </>
-          ) : (
-            <>
-              <p>You are not signed in.</p>
-              <button onClick={() => signIn("azure-ad")}>Sign in with Azure AD</button>
-            </>
-          )}
-        </div>
-
-        {/* "Have I Been Pwned?" search area */}
+        <p className="subtitle">Check if your email address is in a data breach</p>
         <div className="search-box">
           <input
             type="text"
