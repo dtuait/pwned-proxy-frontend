@@ -7,13 +7,19 @@ export default function HomePage() {
   const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
 
+  // Sign out handler
   const handleSignOut = async () => {
     await signOut({
       callbackUrl: `https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`,
     });
-    window.location.href = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`;
+    window.location.href = `https://login.microsoftonline.com/${
+      process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID
+    }/oauth2/v2.0/logout?post_logout_redirect_uri=https://${
+      process.env.NEXT_PUBLIC_MY_DOMAIN
+    }`;
   };
 
+  // "Have I Been Pwned?" click handler
   const handleClick = () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
@@ -24,14 +30,15 @@ export default function HomePage() {
   };
 
   return (
-    <main
+    // <div> or <section>, just NOT <main> so we only have one <main> total.
+    <div
       className="
-        flex-1              /* fills remaining vertical space after Header, before Footer */
         flex
         flex-col
         items-center
         justify-center
         w-full
+        h-full         /* Let it fill the parent main’s height */
         px-4
         bg-tnLight-bg
         text-tnLight-text
@@ -66,7 +73,7 @@ export default function HomePage() {
             <button
               onClick={handleSignOut}
               className="
-                px-4 py-2 rounded-sm 
+                px-4 py-2 rounded-sm
                 font-medium
                 bg-deic-green text-black
                 dark:bg-deic-green dark:text-black
@@ -100,7 +107,7 @@ export default function HomePage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="
-            flex-1 px-3 py-2 
+            flex-1 px-3 py-2
             outline-none
             bg-transparent
           "
@@ -111,13 +118,13 @@ export default function HomePage() {
             bg-deic-green text-black
             dark:bg-deic-green dark:text-black
             hover:opacity-90
-            px-4 py-2 
+            px-4 py-2
             transition-colors
           "
         >
           pwned?
         </button>
       </div>
-    </main>
+    </div>
   );
 }

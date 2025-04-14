@@ -1,5 +1,3 @@
-// app/layout.tsx
-
 import "../styles/globals.css";
 import type { Metadata } from "next";
 import { Providers } from "./providers";
@@ -23,21 +21,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${jetbrainsMono.variable}`}>
+    <html lang="en" className={jetbrainsMono.variable}>
       <body
         className="
-          font-mono 
+          font-mono
           flex flex-col min-h-screen
-          bg-tnLight-bg 
-          text-tnLight-text 
-          dark:bg-tnStorm-bg 
+          bg-tnLight-bg
+          text-tnLight-text
+          dark:bg-tnStorm-bg
           dark:text-tnStorm-text
         "
       >
         <Providers>
           <Header />
-          {/* This main flex-1 (or flex-grow) will push the footer to the bottom */}
+
+          {/*
+            This single <main> is our site’s main content area.
+            flex-1 => takes remaining space to push footer to bottom
+          */}
           <main className="flex-1">{children}</main>
+
           <Footer />
         </Providers>
       </body>
