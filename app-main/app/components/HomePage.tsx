@@ -6,6 +6,9 @@ import { signOut, useSession } from "next-auth/react";
 export default function HomePage() {
   const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
+  const [result, setResult] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Sign out handler
   const handleSignOut = async () => {
@@ -20,13 +23,37 @@ export default function HomePage() {
   };
 
   // "Have I Been Pwned?" click handler
-  const handleClick = () => {
+  const handleClick = async () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
       alert("Please enter an email address!");
       return;
     }
-    alert(`You entered: ${trimmedEmail}`);
+
+    setLoading(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      const res = await fetch(
+        `https://api.haveibeenpwned.security.ait.dtu.dk/api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}`,
+        {
+          headers: { accept: "application/json" },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Request failed with status ${res.status}`);
+      }
+
+      const data = await res.json();
+      setResult(data);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -125,6 +152,16 @@ export default function HomePage() {
           pwned?
         </button>
       </div>
+
+      {loading && <p className="mt-4">Loading...</p>}
+      {error && (
+        <p className="mt-4 text-red-600 dark:text-red-400">Error: {error}</p>
+      )}
+      {result && (
+        <pre className="mt-4 text-left whitespace-pre-wrap max-w-md bg-gray-800 text-white p-2 rounded">
+          {JSON.stringify(result, null, 2)}
+        </pre>
+      )}
     </div>
   );
 }
