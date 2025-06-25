@@ -75,17 +75,6 @@ export default function HomePage() {
         </button>
       </div>
 
-      <p className="mt-2 text-xs text-gray-400">
-        Using Have I Been Pwned is subject to the{' '}
-        <a
-          className="underline"
-          href="https://haveibeenpwned.com/API/v3#TermsOfUse"
-          target="_blank"
-        >
-          terms of use
-        </a>
-      </p>
-
       {loading && <p className="mt-4 text-gray-300">Loading...</p>}
 
       {error && <p className="mt-4 text-red-600">Error: {error}</p>}
