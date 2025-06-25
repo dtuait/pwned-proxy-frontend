@@ -31,7 +31,8 @@ export default function WelcomePage() {
         "https://api.dtuaitsoc.ngrok.dev/api/stealer-logs/dtu.dk/",
         {
           headers: {
-            Authorization: `Bearer ${session.accessToken}`,
+            // session is checked above, so assert non-null here
+            Authorization: `Bearer ${session!.accessToken}`,
           },
         }
       );
