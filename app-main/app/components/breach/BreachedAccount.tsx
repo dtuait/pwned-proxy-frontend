@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { AlertTriangle, Shield, Search, ArrowLeft, Calendar, Database } from 'lucide-react';
 import Link from 'next/link';
 import FireworkAnimation from '../ui/FireworkAnimation';
+import BreachCountCard from '../BreachCountCard';
 
 interface BreachData {
   Name: string;
@@ -210,31 +211,7 @@ export default function BreachCheckerPage() {
             </div>
 
             {/* Breach Count Card */}
-            <div className={`rounded-2xl p-8 border ${
-              results && results.length > 0 
-                ? 'bg-gradient-to-r from-red-900 to-red-700 border-red-600' 
-                : 'bg-gradient-to-r from-green-900 to-green-700 border-green-600'
-            }`}>
-              <div className="text-center">
-                <div className={`text-6xl font-bold mb-2 ${
-                  results && results.length > 0 ? 'text-red-300' : 'text-green-300'
-                }`}>
-                  {results ? results.length : 0}
-                </div>
-                <div className={`text-2xl font-bold mb-4 ${
-                  results && results.length > 0 ? 'text-red-200' : 'text-green-200'
-                }`}>
-                  Data Breach{results && results.length !== 1 ? 'es' : ''}
-                </div>
-                <p className={results && results.length > 0 ? 'text-red-100' : 'text-green-100'}>
-                  {results && results.length > 0 ? (
-                    <>Oh no — pwned! This email address has been found in multiple data breaches. Review the details below to see where your data was exposed.</>
-                  ) : (
-                    <>Good news — no pwnage found! This email address wasn't found in any of the data breaches loaded into Have I Been Pwned. That's great news!</>
-                  )}
-                </p>
-              </div>
-            </div>
+            <BreachCountCard count={results ? results.length : 0} />
 
             {/* Stay Protected Section */}
             <div className="bg-gray-800 rounded-2xl p-6">
