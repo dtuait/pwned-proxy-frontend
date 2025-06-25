@@ -33,6 +33,13 @@ export default function HomePage() {
         }
       );
 
+      if (res.status === 404) {
+        // A 404 means the email was not found in any breach
+        setResults([]);
+        setSearched(true);
+        return;
+      }
+
       if (!res.ok) {
         throw new Error(`Request failed with status ${res.status}`);
       }
