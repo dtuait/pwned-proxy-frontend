@@ -37,20 +37,38 @@ export default function Header() {
         </h1>
       </Link>
 
-      {/* Right side: sign in or user avatar */}
-      <div>
+      {/* Right side: actions */}
+      <div className="flex items-center space-x-4">
+        <Link
+          href="https://api.haveibeenpwned.security.ait.dtu.dk/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button
+            className="
+              bg-blue-600
+              text-white
+              px-3 py-1
+              rounded-sm
+              hover:opacity-90
+              dark:bg-blue-500
+            "
+          >
+            API
+          </button>
+        </Link>
+
         {status === "loading" && <span className="text-sm">Loading...</span>}
 
         {session?.user ? (
-          <div className="flex items-center space-x-4">
-            <UserAvatar
-              name={session.user.name || session.user.email || ""}
-              onClick={handleSignOut}
-            />
-          </div>
+          <UserAvatar
+            name={session.user.name || session.user.email || ""}
+            onClick={handleSignOut}
+          />
         ) : (
           <button
             className="
+              hidden
               bg-deic-green
               text-black
               px-3 py-1
