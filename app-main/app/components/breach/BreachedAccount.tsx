@@ -88,7 +88,8 @@ export default function BreachCheckerPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.accessToken}`,
+          // session is guaranteed above, so assert non-null
+          Authorization: `Bearer ${session!.accessToken}`,
         },
         body: JSON.stringify({ email }),
       });

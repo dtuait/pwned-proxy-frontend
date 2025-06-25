@@ -22,7 +22,12 @@ export default function WelcomePage() {
     try {
       const res = await fetch(
         'https://api.dtuaitsoc.ngrok.dev/api/stealer-logs/dtu.dk/',
-        { headers: { Authorization: `Bearer ${session.accessToken}` } }
+        {
+          headers: {
+            // session is validated above, so assert non-null
+            Authorization: `Bearer ${session!.accessToken}`,
+          },
+        }
       );
       if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
       setDebugResponse(await res.json());
