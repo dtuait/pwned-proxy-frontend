@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import BreachCountCard from "./BreachCountCard";
-import FireworkAnimation from "./ui/FireworkAnimation";
 import { Database, Calendar } from "lucide-react";
 
 export default function HomePage() {
@@ -97,7 +96,6 @@ export default function HomePage() {
 
           <BreachCountCard count={results ? results.length : 0} />
 
-          {results && results.length === 0 && <FireworkAnimation />}
 
           {results && results.length > 0 && (
             <div className="space-y-6 mt-8">

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { AlertTriangle, Shield, Search, ArrowLeft, Calendar, Database, Info } from 'lucide-react';
 import Link from 'next/link';
-import FireworkAnimation from '../ui/FireworkAnimation';
 
 interface BreachData {
   Name: string;
@@ -22,7 +21,6 @@ export default function BreachCheckerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
-  const [showFireworks, setShowFireworks] = useState(false);
   const [debugInfo, setDebugInfo] = useState<any[]>([]);
   const [testMode, setTestMode] = useState(false);
 
@@ -89,7 +87,6 @@ export default function BreachCheckerPage() {
     setLoading(true);
     setError(null);
     setSearched(false);
-    setShowFireworks(false);
     setDebugInfo([]);
     
     addDebug('START', 'Starting breach check', { email, sessionExists: !!session });
@@ -186,8 +183,7 @@ export default function BreachCheckerPage() {
       });
       
       if (!data || data.length === 0) {
-        setShowFireworks(true);
-        setTimeout(() => setShowFireworks(false), 5000);
+        // No breaches found
       }
 
     } catch (err) {
@@ -223,8 +219,6 @@ export default function BreachCheckerPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white relative">
-      {/* Firework Animation */}
-      {showFireworks && <FireworkAnimation />}
       
       {/* Header */}
       <div className="bg-gray-800 border-b border-gray-700 relative z-20">

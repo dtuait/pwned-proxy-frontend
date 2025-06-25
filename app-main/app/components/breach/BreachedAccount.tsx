@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { AlertTriangle, Shield, Search, ArrowLeft, Calendar, Database } from 'lucide-react';
 import Link from 'next/link';
-import FireworkAnimation from '../ui/FireworkAnimation';
 import BreachCountCard from '../BreachCountCard';
 
 interface BreachData {
@@ -27,7 +26,6 @@ export default function BreachCheckerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
-  const [showFireworks, setShowFireworks] = useState(false);
 
   const handleBreachCheck = async () => {
     if (!email || !session) return;
@@ -74,7 +72,6 @@ export default function BreachCheckerPage() {
     setLoading(true);
     setError(null);
     setSearched(false);
-    setShowFireworks(false);
     
     try {
       // Debug session information
@@ -109,12 +106,7 @@ export default function BreachCheckerPage() {
       setResults(data || []);
       setSearched(true);
       
-      // Show fireworks if no breaches found
-      if (!data || data.length === 0) {
-        setShowFireworks(true);
-        // Stop fireworks after 5 seconds
-        setTimeout(() => setShowFireworks(false), 5000);
-      }
+      // No breaches found
     } catch (err) {
       console.log('=== DEBUG: Catch Block ===');
       console.error('Full error object:', err);
@@ -144,8 +136,6 @@ export default function BreachCheckerPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white relative">
-      {/* Firework Animation */}
-      {showFireworks && <FireworkAnimation />}
       
       {/* Header */}
       <div className="bg-gray-800 border-b border-gray-700 relative z-20">
