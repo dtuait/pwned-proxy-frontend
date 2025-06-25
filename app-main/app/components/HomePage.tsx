@@ -26,8 +26,12 @@ export default function HomePage() {
     setSearched(false);
 
     try {
+      const apiBase =
+        process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
+        "https://api.haveibeenpwned.security.ait.dtu.dk/";
+
       const res = await fetch(
-        `https://api.haveibeenpwned.security.ait.dtu.dk/api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}`,
+        `${apiBase}api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}`,
         {
           headers: { accept: "application/json" },
         }

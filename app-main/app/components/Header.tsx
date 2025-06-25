@@ -40,7 +40,10 @@ export default function Header() {
       {/* Right side: actions */}
       <div className="flex items-center space-x-4">
         <Link
-          href="https://api.haveibeenpwned.security.ait.dtu.dk/"
+          href={
+            process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
+            "https://api.haveibeenpwned.security.ait.dtu.dk/"
+          }
           target="_blank"
           rel="noopener noreferrer"
         >
