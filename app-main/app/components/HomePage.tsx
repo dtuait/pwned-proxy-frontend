@@ -21,6 +21,25 @@ export default function HomePage() {
   const [results, setResults] = useState<BreachData[] | null>(null);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [websiteCount, setWebsiteCount] = useState<number | null>(null);
+  const [accountCount, setAccountCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/site-stats');
+        if (!res.ok) {
+          throw new Error(`Failed to load stats: ${res.status}`);
+        }
+        const data = await res.json();
+        setWebsiteCount(data.totalWebsites);
+        setAccountCount(data.totalAccounts);
+      } catch (err) {
+        console.error('Failed fetching stats', err);
+      }
+    };
+    fetchStats();
+  }, []);
 
 
   // Sign out handler
@@ -300,7 +319,7 @@ return (
           {/* 1: Blue gradient */}
           <div className="bg-white rounded-xl p-6 text-center shadow">
             <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-              892
+              {websiteCount !== null ? websiteCount.toLocaleString() : '—'}
             </p>
             <p className="text-gray-600 mt-1">Pwned Websites</p>
           </div>
@@ -308,7 +327,7 @@ return (
           {/* 2: Purple gradient */}
           <div className="bg-white rounded-xl p-6 text-center shadow">
             <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
-              14,985,620
+              {accountCount !== null ? accountCount.toLocaleString() : '—'}
             </p>
             <p className="text-gray-600 mt-1">Pwned Accounts</p>
           </div>
