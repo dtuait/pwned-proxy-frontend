@@ -1,6 +1,5 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect } from "react";
 
 interface Particle {
   x: number;
@@ -14,93 +13,89 @@ interface Particle {
 }
 
 export default function FireworkAnimation() {
-  const [particles, setParticles] = useState<Particle[]>([]);
-
+  // pastel / lime-y palette
   const colors = [
-    '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7',
-    '#dda0dd', '#98d8c8', '#f7dc6f', '#bb8fce', '#85c1e9'
+    "#E8FAD0", // pale lime
+    "#D9F99D", // your mid-green
+    "#C1D72E", // logo green
+    "#B5E48C",
+    "#DCFCE7",
+    "#F0FDF4",
   ];
 
-  const createFirework = (x: number, y: number) => {
-    const newParticles: Particle[] = [];
-    const particleCount = 20 + Math.random() * 10;
-
-    for (let i = 0; i < particleCount; i++) {
-      const angle = (Math.PI * 2 * i) / particleCount;
-      const velocity = 2 + Math.random() * 3;
-      
-      newParticles.push({
-        x,
-        y,
-        vx: Math.cos(angle) * velocity,
-        vy: Math.sin(angle) * velocity,
-        life: 60,
-        maxLife: 60,
+  function createFirework(x: number, y: number): Particle[] {
+    const particles: Particle[] = [];
+    // bigger explosion: 40–60 sparks
+    const count = 40 + Math.random() * 20;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count;
+      const speed = 2 + Math.random() * 4;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 80,
+        maxLife: 80,
         color: colors[Math.floor(Math.random() * colors.length)],
-        size: 2 + Math.random() * 3
+        size: 2 + Math.random() * 4,
       });
     }
-
-    return newParticles;
-  };
+    return particles;
+  }
 
   useEffect(() => {
-    const canvas = document.getElementById('firework-canvas') as HTMLCanvasElement;
+    const canvas = document.getElementById("firework-canvas") as HTMLCanvasElement;
     if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
 
-    let animationId: number;
     let particles: Particle[] = [];
 
-    // Create initial fireworks
-    const createRandomFirework = () => {
+    const launch = () => {
       const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height * 0.6 + canvas.height * 0.2;
+      const y = Math.random() * canvas.height * 0.4 + canvas.height * 0.3;
       particles.push(...createFirework(x, y));
     };
 
-    // Create multiple fireworks initially
-    for (let i = 0; i < 5; i++) {
-      setTimeout(createRandomFirework, i * 200);
-    }
+    // initial volleys
+    for (let i = 0; i < 3; i++) setTimeout(launch, i * 300);
+    const interval = setInterval(launch, 1000);
 
-    // Continue creating fireworks periodically
-    const fireworkInterval = setInterval(createRandomFirework, 800);
-
+    let animId: number;
     const animate = () => {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      particles = particles.filter(particle => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        particle.vy += 0.1; // gravity
-        particle.life--;
+      particles = particles.filter((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05; // lighter gravity
+        p.life--;
 
-        const alpha = particle.life / particle.maxLife;
+        const alpha = p.life / p.maxLife;
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = particle.color;
+        ctx.fillStyle = p.color;
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-
-        return particle.life > 0;
+        return p.life > 0;
       });
 
       ctx.globalAlpha = 1;
-      animationId = requestAnimationFrame(animate);
+      animId = requestAnimationFrame(animate);
     };
-
     animate();
 
     return () => {
-      cancelAnimationFrame(animationId);
-      clearInterval(fireworkInterval);
+      window.removeEventListener("resize", resize);
+      clearInterval(interval);
+      cancelAnimationFrame(animId);
     };
   }, []);
 
@@ -108,7 +103,7 @@ export default function FireworkAnimation() {
     <canvas
       id="firework-canvas"
       className="fixed inset-0 pointer-events-none z-10"
-      style={{ background: 'transparent' }}
+      style={{ background: "transparent" }}
     />
   );
 }

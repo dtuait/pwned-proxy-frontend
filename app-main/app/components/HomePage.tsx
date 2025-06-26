@@ -1,141 +1,327 @@
 "use client";
 
-import React, { useState } from "react";
-import BreachCountCard from "./BreachCountCard";
-import { Database, Calendar } from "lucide-react";
+import React, {  useEffect, useRef, useState } from "react";
+import { signOut, useSession, signIn } from "next-auth/react";
+import { Shield, Search, AlertTriangle, CheckCircle } from "lucide-react";
+import FireworkAnimation from "../components/ui/FireworkAnimation";
+
+
+interface BreachData {
+  Name: string;
+  Title?: string;
+  BreachDate?: string;
+  Domain?: string;
+  PwnCount?: number;
+  Description?: string;
+}
 
 export default function HomePage() {
   const [email, setEmail] = useState("");
-  const [results, setResults] = useState<any[] | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [results, setResults] = useState<BreachData[] | null>(null);
   const [searched, setSearched] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+
+  // Sign out handler
+  const handleSignOut = async () => {
+    await signOut({
+      callbackUrl: `https://${process.env.NEXT_PUBLIC_MY_DOMAIN}`,
+    });
+    window.location.href = `https://login.microsoftonline.com/${
+      process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID
+    }/oauth2/v2.0/logout?post_logout_redirect_uri=https://${
+      process.env.NEXT_PUBLIC_MY_DOMAIN
+    }`;
+  };
+
+  
+
+  // Email validation
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   // "Have I Been Pwned?" click handler
   const handleClick = async () => {
     const trimmedEmail = email.trim();
-    if (!trimmedEmail) {
-      alert("Please enter an email address!");
-      return;
-    }
-
-    setLoading(true);
+    
+    // Reset previous results
     setError(null);
     setResults(null);
     setSearched(false);
 
+    // Validation
+    if (!trimmedEmail) {
+      setError("Please enter an email address!");
+      return;
+    }
+
+    if (!validateEmail(trimmedEmail)) {
+      setError("Please enter a valid email address!");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const apiBase =
-        process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
-        "https://api.haveibeenpwned.security.ait.dtu.dk/";
+      console.log('=== DEBUG: Starting breach check ===');
+      console.log('Email:', trimmedEmail);
 
-      const res = await fetch(
-        `${apiBase}api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}`,
-        {
-          headers: { accept: "application/json" },
-        }
-      );
+      const apiUrl = `https://api.haveibeenpwned.security.ait.dtu.dk/api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}/`;
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+        },
+      });
 
-      if (res.status === 404) {
-        // A 404 means the email was not found in any breach
+      console.log('=== DEBUG: Response received ===');
+      console.log('Status:', response.status);
+
+      // Handle 404 as "no breaches found"
+      if (response.status === 404) {
+        console.log('No breaches found (404)');
         setResults([]);
         setSearched(true);
+        
+        // dynamically import so Next.js won't try to SSR this
+          import("canvas-confetti").then((mod) => {
+            const confetti = mod.default;
+
+            // one‐time burst in center‐top
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { x: 0.5, y: 0.7 },
+              gravity: 1.2,
+              decay: 0.9,
+              ticks: 200,
+            });
+
+            // Left side burst (fires immediately)
+            confetti({
+              particleCount: 80,
+              spread: 60,
+              angle: 60, // Angle towards center-right
+              origin: { x: 0.1, y: 0.75 }, // Left side, slightly lower
+              gravity: 1.0,
+              decay: 0.92,
+              ticks: 180,
+              colors: ['#C7E333', '#A8CC2A', '#22C55E'],
+            });
+
+            // Right side burst (fires immediately)
+            confetti({
+              particleCount: 80,
+              spread: 60,
+              angle: 120, // Angle towards center-left
+              origin: { x: 0.9, y: 0.75 }, // Right side, slightly lower
+              gravity: 1.0,
+              decay: 0.92,
+              ticks: 180,
+              colors: ['#C7E333', '#A8CC2A', '#22C55E'],
+            });
+
+          }).catch((e) => {
+            console.error("Failed to load confetti module:", e);
+          });
+
         return;
       }
 
-      if (!res.ok) {
-        throw new Error(`Request failed with status ${res.status}`);
+      const text = await response.text();
+      console.log('Response text:', text);
+
+      if (!response.ok) {
+        setError(`Error: ${response.status} - ${response.statusText}`);
+        return;
       }
 
-      const data = await res.json();
-      setResults(data);
+      const data = JSON.parse(text);
+      setResults(data || []);
       setSearched(true);
+
+      console.log('=== DEBUG: Success ===');
+      console.log('Breach count:', data ? data.length : 0);
+
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      setError(message);
+      console.error('=== DEBUG: Error ===', err);
+      setError('An error occurred while checking for breaches. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col items-center bg-[#0d0f14] px-4">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mt-14 mb-6 text-center">
-        Check if your email address is in a data breach
-      </h1>
+  // Handle Enter key press
+  const handleKey = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleClick();
+    }
+  };
+return (
+    <div className="min-h-screen relative overflow-hidden">
+      {/* 1) EXACT two-stop gradient to match your pic */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(135deg, #E0F2FE 0%,rgb(182, 196, 155) 100%)",
+        }}
+      />
 
-      <div className="flex w-full max-w-lg bg-white rounded-lg overflow-hidden shadow-lg">
-        <input
-          type="email"
-          placeholder="Enter email address..."
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="flex-1 px-4 py-4 text-gray-900 placeholder-gray-500 focus:outline-none"
-        />
-        <button
-          onClick={handleClick}
-          disabled={loading || !email}
-          className="px-8 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-500 text-white font-semibold"
-        >
-          {loading ? (
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mx-auto"></div>
-          ) : (
-            'Check'
-          )}
-        </button>
-      </div>
+      {/* 2) Sign-out button */}
+      {/* <button
+        onClick={handleSignOut}
+        className="absolute top-4 right-4 z-10 bg-white/80 text-green-700 px-4 py-2 rounded-lg shadow hover:bg-white"
+      >
+        Sign Out
+      </button> */}
 
-      {loading && <p className="mt-4 text-gray-300">Loading...</p>}
+       <main className="relative z-10 max-w-3xl mx-auto px-4 py-16 text-center">
+        {/* Hero */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">
+          <span className="text-[#2563EB]">Have I </span>
+          <span className="text-[#C7E333]">Been</span>
+          <span className="text-gray-600"> Pwned?</span>
+        </h1>
+          <p className="text-lg text-gray-800 mb-8">
+            Check if your email address or phone number has been compromised in a data breach.
+          </p>
 
-      {error && <p className="mt-4 text-red-600">Error: {error}</p>}
+          {/* Search bar */}
+          <div className="flex justify-center mb-4">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleKey}
+              disabled={loading}
+              className="w-full max-w-md p-4 rounded-l-lg border border-gray-300 focus:outline-none focus:border-green-500"
+            />
+            <button
+              onClick={handleClick}
+              disabled={loading}
+              className="bg-[#C7E333] hover:bg-[#A8CC2A] text-white px-6 font-semibold rounded-r-lg disabled:opacity-50"
+            >
+              {loading ? "Checking…" : "Check"}
+            </button>
+          </div>
+          <p className="text-sm text-gray-700">
+            Using this service is subject to our{" "}
+            <a href="#" className="underline text-green-700">
+              terms of use
+            </a>
+            .
+          </p>
+        </div>
 
-      {searched && (
-        <>
-          <h2 className="text-3xl font-bold text-center mt-16">Email Breach History</h2>
-          <p className="text-center text-gray-300">Timeline of data breaches affecting your email address</p>
+        {/* Error message */}
+        {error && (
+          <div className="max-w-md mx-auto mb-6 text-center text-red-700">
+            {error}
+          </div>
+        )}
 
-          <BreachCountCard count={results ? results.length : 0} />
+        {/* Results */}
+        {searched && results && (
+          <div className="mx-auto w-full px-4 md:px-0">
+            {results.length > 0 ? (
+              <div className="bg-green-50 rounded-2xl p-6 shadow-lg border-l-4 border-red-500 max-w-4xl mx-auto">
+                {/* Icon + heading */}
+                <div className="flex items-center mb-4">
+                  <AlertTriangle className="w-6 h-6 text-red-500 mr-2" />
+                  <h3 className="text-xl font-bold text-red-600">Oh no — pwned!</h3>
+                </div>
 
+                {/* Breach count */}
+                <p className="text-red-500 mb-6">
+                  Found in {results.length} breach{results.length > 1 ? "es" : ""}.
+                </p>
 
-          {results && results.length > 0 && (
-            <div className="space-y-6 mt-8">
-              {results.map((breach: any, index: number) => (
-                <div key={index} className="bg-gray-800 rounded-2xl p-6 border-l-4 border-red-500">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-16 h-16 bg-gray-700 rounded-lg flex items-center justify-center">
-                        <Database className="w-8 h-8 text-gray-400" />
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-xl font-bold">{breach.Title || breach.Name}</h3>
-                        {breach.BreachDate && (
-                          <div className="flex items-center gap-2 text-gray-400">
-                            <Calendar className="w-4 h-4" />
-                            <span>{new Date(breach.BreachDate).toLocaleDateString()}</span>
-                          </div>
-                        )}
-                      </div>
-                      {breach.Domain && (
-                        <p className="text-gray-300 mb-2">Domain: {breach.Domain}</p>
-                      )}
-                      {breach.PwnCount && (
-                        <p className="text-gray-300 mb-2">
-                          Compromised accounts: {breach.PwnCount.toLocaleString()}
+                {/* Breach list */}
+                <div className="space-y-3">
+                  {results.map((b, i) => (
+                    <div
+                      key={i}
+                      className="
+                        bg-white 
+                        rounded-md 
+                        p-4 
+                        border border-red-200
+                        hover:bg-red-100        /* light pink hover */
+                        transition-colors
+                      "
+                    >
+                      <h4 className="text-red-600 font-semibold text-lg">
+                        {b.Title || b.Name}
+                      </h4>
+                      {b.BreachDate && (
+                        <p className="text-gray-500 text-sm mt-1">
+                          Date: {new Date(b.BreachDate).toLocaleDateString()}
                         </p>
                       )}
-                      {breach.Description && (
-                        <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: breach.Description }} />
-                      )}
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
+              </div>
+            ) : (
+              
+              <div className="relative">
+                {/* 1) Place your fireworks behind or above */}
+                {/* <FireworkAnimation /> */}
+
+                {/* 2) Your “Good news” card */}
+                <div className="bg-white/90 rounded-2xl p-6 shadow-lg border border-green-200 relative z-20">
+                  <div className="flex items-center justify-center  mb-4">
+                    <CheckCircle className="w-6 h-6 text-[#C7E333] mr-2" />
+                    <h2 className="text-2xl md:text-3xl font-bold text-center">
+                      <span className="text-[#C7E333]">Good news</span>
+                      <span className="text-gray-600"> — </span>
+                      <span className="text-[#C7E333]">no pwnage!</span>
+                    </h2>
+                   
+                  </div>
+                  <p className="text-gray-700 text-center">
+                    No breached accounts or pastes found.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* (Optional) Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8 max-w-4xl mx-auto px-4">
+          {/* 1: Blue gradient */}
+          <div className="bg-white rounded-xl p-6 text-center shadow">
+            <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
+              892
+            </p>
+            <p className="text-gray-600 mt-1">Pwned Websites</p>
+          </div>
+
+          {/* 2: Purple gradient */}
+          <div className="bg-white rounded-xl p-6 text-center shadow">
+            <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
+              14,985,620
+            </p>
+            <p className="text-gray-600 mt-1">Pwned Accounts</p>
+          </div>
+
+          {/* 3: Pink gradient */}
+          <div className="bg-white rounded-xl p-6 text-center shadow">
+            <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-700">
+              32
+            </p>
+            <p className="text-gray-600 mt-1">Pastes</p>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

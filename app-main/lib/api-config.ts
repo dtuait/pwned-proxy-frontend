@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://api.dtuaitsoc.ngrok.dev',
+  BASE_URL: 'https://api.haveibeenpwned.security.ait.dtu.dk',
   ENDPOINTS: {
     // Endpoints that require email + apikey
     BREACHED_ACCOUNT: '/breached-account',           // GET 5) Breached Account (by email)
