@@ -32,8 +32,11 @@ export default function Header() {
     >
       {/* Left side: site logo or title */}
       <Link href="/">
-        <h1 className="text-lg font-bold text-tnLight-accent dark:text-tnStorm-accent">
+        <h1 className="text-lg font-bold text-tnLight-accent dark:text-tnStorm-accent flex items-center">
           Deic HaveIBeenPwned
+          <span className="ml-2 text-sm text-tnLight-red dark:text-tnStorm-green">
+            (Beta)
+          </span>
         </h1>
       </Link>
 
