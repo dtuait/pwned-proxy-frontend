@@ -86,6 +86,7 @@ export default function WelcomePage() {
         Sign Out
       </button>
       
+
       {/* User Info */}
       <div className="max-w-4xl mx-auto mb-8">
         <h1 className="text-3xl font-bold text-[#7aa2f7]">
@@ -93,6 +94,33 @@ export default function WelcomePage() {
         </h1>
         <p className="mt-1">Logged in as {session.user?.email}</p>
       </div>
+
+      {/* ==== HERE: embed your iframe ==== */}
+      <section className="max-w-4xl mx-auto mt-8">
+        <h2 className="text-2xl font-semibold text-[#7aa2f7] mb-2">
+          Live API Preview
+        </h2>
+
+        {/* Scrollable “window” box */}
+        <div className="border border-gray-700 rounded overflow-auto h-80">
+          <iframe
+            src="https://api.haveibeenpwned.security.ait.dtu.dk/"
+            title="Backend API Preview"
+            className="w-full min-h-full"
+          />
+        </div>
+
+        {/* Click-out link */}
+        <a
+          href="https://api.haveibeenpwned.security.ait.dtu.dk/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block mt-2 text-[#9ece6a] hover:underline"
+        >
+          Open full API site →
+        </a>
+      </section>
+
 
       {/* Session Debug (hidden in prod) */}
       <div className="max-w-4xl mx-auto mb-12 border border-gray-700 rounded-lg p-4">
