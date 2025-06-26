@@ -33,7 +33,12 @@ export default function Header() {
       {/* Left side: site logo or title */}
       <Link href="/">
         <h1 className="text-lg font-bold text-tnLight-accent dark:text-tnStorm-accent flex items-center">
-          Deic HaveIBeenPwned
+          <img
+            src="https://www.deic.dk/themes/custom/deic/logo.svg"
+            alt="Deic logo"
+            className="h-6 mr-2"
+          />
+          HaveIBeenPwned
           <span className="ml-2 text-sm text-tnLight-red dark:text-tnStorm-green">
             (Beta)
           </span>
