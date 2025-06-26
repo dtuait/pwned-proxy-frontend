@@ -35,7 +35,7 @@ export default function HomePage() {
         setWebsiteCount(data.totalWebsites);
         setAccountCount(data.totalAccounts);
       } catch (err) {
-        console.log('Failed fetching stats', err);
+        console.error('Failed fetching stats', err);
       }
     };
     fetchStats();
