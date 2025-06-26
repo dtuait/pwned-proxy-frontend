@@ -13,6 +13,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Deic HaveIBeenPwned",
   description: "...",
+  icons: {
+    icon: "https://www.deic.dk/sites/default/files/favicon_1.ico",
+  },
 };
 
 export default function RootLayout({
