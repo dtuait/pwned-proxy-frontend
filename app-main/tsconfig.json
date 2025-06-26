@@ -29,8 +29,6 @@
     "**/*.tsx",
     "next-env.d.ts",
     "next-auth.d.ts",
-    ".next/types/**/*.ts"
-    ".next/types/**/*.ts",
     "global.d.ts"
   ],
   "exclude": [
