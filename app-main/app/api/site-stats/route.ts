@@ -3,9 +3,9 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     const breachesRes = await fetch('https://haveibeenpwned.com/api/v3/breaches', {
-
       headers: {
         'User-Agent': 'pwned-proxy-frontend',
+        'hibp-api-key': process.env.HIBP_API_KEY ?? '',
       },
     });
     if (!breachesRes.ok) {
@@ -15,14 +15,7 @@ export async function GET() {
       );
     }
 
-    const [breaches, homeHtml] = await Promise.all([
-      breachesRes.json(),
-      fetch('https://haveibeenpwned.com/', {
-        headers: {
-          'User-Agent': 'pwned-proxy-frontend',
-        },
-      }).then((r) => r.ok ? r.text() : '')
-    ]);
+    const breaches = await breachesRes.json();
     const totalWebsites = breaches.length;
     const totalAccounts = breaches.reduce(
       (sum: number, b: { PwnCount?: number }) => sum + (b.PwnCount || 0),
@@ -33,6 +26,7 @@ export async function GET() {
     const pasteRes = await fetch('https://haveibeenpwned.com/api/v3/pastes', {
       headers: {
         'User-Agent': 'pwned-proxy-frontend',
+        'hibp-api-key': process.env.HIBP_API_KEY ?? '',
       },
     });
     if (!pasteRes.ok) {
