@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AlertTriangle, CheckCircle } from "lucide-react";
 
 async function sha1(message: string): Promise<string> {
   const msgBuffer = new TextEncoder().encode(message);
@@ -41,7 +42,36 @@ export default function PasswordChecker() {
           break;
         }
       }
-      setResult(count === null ? 0 : count);
+      const finalCount = count === null ? 0 : count;
+      setResult(finalCount);
+      if (finalCount === 0) {
+        import("canvas-confetti")
+          .then((mod) => {
+            const confetti = mod.default;
+            confetti({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.7 } });
+            confetti({
+              particleCount: 80,
+              spread: 60,
+              angle: 60,
+              origin: { x: 0.1, y: 0.75 },
+              gravity: 1.0,
+              decay: 0.92,
+              ticks: 180,
+              colors: ["#C7E333", "#A8CC2A", "#22C55E"],
+            });
+            confetti({
+              particleCount: 80,
+              spread: 60,
+              angle: 120,
+              origin: { x: 0.9, y: 0.75 },
+              gravity: 1.0,
+              decay: 0.92,
+              ticks: 180,
+              colors: ["#C7E333", "#A8CC2A", "#22C55E"],
+            });
+          })
+          .catch((e) => console.error("Failed to load confetti module:", e));
+      }
     } catch (err) {
       setError((err as Error).message || "Error checking password");
     } finally {
@@ -50,32 +80,53 @@ export default function PasswordChecker() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center space-x-2">
+    <div className="space-y-8">
+      <div className="flex justify-center">
         <input
           type="password"
           placeholder="Enter password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="flex-1 px-3 py-2 border rounded text-black"
+          onKeyDown={(e) => e.key === "Enter" && handleCheck()}
+          className="w-full max-w-md p-4 rounded-l-lg border border-gray-300 text-black focus:outline-none focus:border-green-500"
+          disabled={loading}
         />
         <button
           onClick={handleCheck}
-          disabled={loading || !password}
-          className="px-4 py-2 bg-blue-600 text-white rounded disabled:bg-gray-500"
+          disabled={loading}
+          className="bg-[#C7E333] hover:bg-[#A8CC2A] text-white px-6 font-semibold rounded-r-lg disabled:opacity-50"
         >
-          {loading ? "Checking..." : "Check"}
+          {loading ? "Checking…" : "Check"}
         </button>
       </div>
-      {error && <p className="text-red-600">{error}</p>}
+      {error && <div className="text-red-700 text-center">{error}</div>}
       {result !== null && (
         result > 0 ? (
-          <p className="text-red-600">Password found {result.toLocaleString()} times in breaches.</p>
+          <div className="bg-red-100 border border-red-300 rounded-xl p-6 max-w-md mx-auto text-red-700 space-y-2">
+            <div className="flex items-center justify-center mb-2">
+              <AlertTriangle className="w-6 h-6 text-red-600 mr-2" />
+              <h2 className="text-xl font-bold">Oh no — pwned!</h2>
+            </div>
+            <p>This password has been seen {result.toLocaleString()} times before in data breaches!</p>
+            <p>
+              This password has previously appeared in a data breach and should never be used. If you've ever used it anywhere before, change it immediately!
+            </p>
+          </div>
         ) : (
-          <p className="text-green-600">Password not found in known breaches.</p>
+          <div className="relative">
+            <div className="bg-white/90 border border-green-200 rounded-xl p-6 shadow max-w-md mx-auto text-gray-700">
+              <div className="flex items-center justify-center mb-2">
+                <CheckCircle className="w-6 h-6 text-[#22C55E] mr-2" />
+                <h2 className="text-xl font-bold text-[#22C55E]">Good news — no pwnage found!</h2>
+              </div>
+              <p>
+                This password wasn't found in any of the Pwned Passwords loaded into Have I Been Pwned. That doesn't necessarily mean it's a good password, merely that it's not indexed on this site.
+              </p>
+            </div>
+          </div>
         )
       )}
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 text-center">
         The password is hashed locally and only a partial hash is sent to the API for privacy.
       </p>
     </div>
