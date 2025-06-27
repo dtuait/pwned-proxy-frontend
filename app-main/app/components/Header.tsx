@@ -39,9 +39,6 @@ export default function Header() {
             className="h-6 mr-2"
           />
           HaveIBeenPwned
-          <span className="ml-2 text-sm text-tnLight-red dark:text-tnStorm-green">
-            (Beta)
-          </span>
         </h1>
       </Link>
 
