@@ -67,7 +67,7 @@ export default function AboutPage() {
             className="block"
           >
             <img
-              src="https://www.postman.com/assets/logos/postman-logo-stacked.svg"
+              src="/postman-icon-svgrepo-com.svg"
               alt="Download Postman collection"
               className="w-32 h-32 hover:opacity-80"
             />
