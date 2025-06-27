@@ -3,6 +3,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Github } from "lucide-react";
 
 export default function Footer() {
   // Keep track of user’s theme choice. Default is "auto".
@@ -87,10 +88,29 @@ export default function Footer() {
         </select>
       </div>
 
-      {/* Center or right side: your existing footer text */}
-      <p className="text-sm">
-        © {new Date().getFullYear()} My Next.js App
-      </p>
+      {/* Right side: GitHub links and message */}
+      <div className="text-sm flex items-center space-x-3">
+        <span>© {new Date().getFullYear()} My Next.js App</span>
+        <a
+          href="https://github.com/dtuait/pwned-proxy-frontend"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center hover:underline"
+        >
+          <Github className="w-4 h-4 mr-1" />
+          Frontend
+        </a>
+        <a
+          href="https://github.com/dtuait/pwned-proxy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center hover:underline"
+        >
+          <Github className="w-4 h-4 mr-1" />
+          Backend
+        </a>
+        <span>Get involved on GitHub!</span>
+      </div>
     </footer>
   );
 }
