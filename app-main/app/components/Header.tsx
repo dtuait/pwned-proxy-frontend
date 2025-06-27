@@ -82,6 +82,20 @@ export default function Header() {
             Passwords
           </button>
         </Link>
+        <Link href="/about">
+          <button
+            className="
+              bg-gray-600
+              text-white
+              px-3 py-1
+              rounded-sm
+              hover:opacity-90
+              dark:bg-gray-500
+            "
+          >
+            About
+          </button>
+        </Link>
 
         {status === "loading" && <span className="text-sm">Loading...</span>}
 
