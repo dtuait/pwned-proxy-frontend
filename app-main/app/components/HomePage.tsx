@@ -1,6 +1,6 @@
 "use client";
 
-import React, {  useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { signOut, useSession, signIn } from "next-auth/react";
 import { Shield, Search, AlertTriangle, CheckCircle } from "lucide-react";
 import FireworkAnimation from "../components/ui/FireworkAnimation";
@@ -21,29 +21,7 @@ export default function HomePage() {
   const [results, setResults] = useState<BreachData[] | null>(null);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [websiteCount, setWebsiteCount] = useState<number | null>(null);
-  const [accountCount, setAccountCount] = useState<number | null>(null);
-  const [pasteCount, setPasteCount] = useState<number | null>(null);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await fetch('/api/site-stats');
-        if (!res.ok) {
-          throw new Error(`Failed to load stats: ${res.status}`);
-        }
-        const data = await res.json();
-        setWebsiteCount(data.totalWebsites);
-        setAccountCount(data.totalAccounts);
-        if (typeof data.totalPastes === 'number') {
-          setPasteCount(data.totalPastes);
-        }
-      } catch (err) {
-        console.log('Failed fetching stats', err);
-      }
-    };
-    fetchStats();
-  }, []);
 
 
   // Sign out handler
@@ -318,32 +296,7 @@ return (
           </div>
         )}
 
-        {/* (Optional) Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8 max-w-4xl mx-auto px-4">
-          {/* 1: Blue gradient */}
-          <div className="bg-white rounded-xl p-6 text-center shadow">
-            <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-              {websiteCount !== null ? websiteCount.toLocaleString() : '—'}
-            </p>
-            <p className="text-gray-600 mt-1">Pwned Websites</p>
-          </div>
-
-          {/* 2: Purple gradient */}
-          <div className="bg-white rounded-xl p-6 text-center shadow">
-            <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
-              {accountCount !== null ? accountCount.toLocaleString() : '—'}
-            </p>
-            <p className="text-gray-600 mt-1">Pwned Accounts</p>
-          </div>
-
-          {/* 3: Pink gradient */}
-          <div className="bg-white rounded-xl p-6 text-center shadow">
-            <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-700">
-              {pasteCount !== null ? pasteCount.toLocaleString() : '—'}
-            </p>
-            <p className="text-gray-600 mt-1">Pastes</p>
-          </div>
-        </div>
+        
       </main>
     </div>
   );
