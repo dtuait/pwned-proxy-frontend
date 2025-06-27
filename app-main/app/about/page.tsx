@@ -41,17 +41,15 @@ export default function AboutPage() {
         }}
       />
       <main className="relative z-10 max-w-3xl mx-auto px-4 py-16 text-center space-y-6">
-        <h1 className="text-5xl md:text-6xl font-bold">About</h1>
         <p className="text-lg text-gray-800">
-          If you work in the IT security department at one of these
-          universities, email
+          Contact
           <a
             href="mailto:itsecurity@dtu.dk"
             className="underline text-blue-600 ml-1"
           >
             itsecurity@dtu.dk
           </a>
-          to request access to the HaveIBeenPwned data we provide.
+          to request access.
         </p>
         <h2 className="text-xl font-semibold mt-6">Subscribed Universities</h2>
         <ul className="list-disc pl-5 text-left space-y-1">
