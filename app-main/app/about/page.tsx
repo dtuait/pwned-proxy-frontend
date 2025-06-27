@@ -32,18 +32,48 @@ export default function AboutPage() {
   }
 
   return (
-    <main className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">About</h1>
-      <p>
-        Write contact {process.env.NEXT_PUBLIC_CONTACT_EMAIL} if you would like to get approved
-        access to your university!
-      </p>
-      <h2 className="text-xl font-semibold mt-4">Subscribed Universities</h2>
-      <ul className="list-disc pl-5">
-        {domains.map((d) => (
-          <li key={d}>{d}</li>
-        ))}
-      </ul>
-    </main>
+    <div className="min-h-screen relative overflow-hidden">
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(135deg, #E0F2FE 0%, rgb(182, 196, 155) 100%)",
+        }}
+      />
+      <main className="relative z-10 max-w-3xl mx-auto px-4 py-16 text-center space-y-6">
+        <h1 className="text-5xl md:text-6xl font-bold">About</h1>
+        <p className="text-lg text-gray-800">
+          If you work in the IT security department at one of these
+          universities, email
+          <a
+            href="mailto:itsecurity@dtu.dk"
+            className="underline text-blue-600 ml-1"
+          >
+            itsecurity@dtu.dk
+          </a>
+          to request access to the HaveIBeenPwned data we provide.
+        </p>
+        <h2 className="text-xl font-semibold mt-6">Subscribed Universities</h2>
+        <ul className="list-disc pl-5 text-left space-y-1">
+          {domains.map((d) => (
+            <li key={d}>{d}</li>
+          ))}
+        </ul>
+        {/* Download Postman collection from public/haveibeenpwned.deic.dk.postman_collection_v2.json */}
+        <div className="mt-8 flex justify-center">
+          <a
+            href="/haveibeenpwned.deic.dk.postman_collection_v2.json"
+            download
+            className="block"
+          >
+            <img
+              src="https://www.postman.com/assets/logos/postman-logo-stacked.svg"
+              alt="Download Postman collection"
+              className="w-32 h-32 hover:opacity-80"
+            />
+          </a>
+        </div>
+      </main>
+    </div>
   );
 }
