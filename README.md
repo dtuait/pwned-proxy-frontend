@@ -20,3 +20,11 @@ Next.js exposes variables prefixed with `NEXT_PUBLIC_` to the browser during
 runtime. When this variable is defined the application will automatically load
 the GA script and start sending page view events. Remember to rebuild the app
 after changing environment variables.
+
+### Contact Email
+
+Set `NEXT_PUBLIC_CONTACT_EMAIL` in `.env.local` to display a contact address on the About page:
+
+```bash
+NEXT_PUBLIC_CONTACT_EMAIL=itsecurity@dtu.dk
+```
