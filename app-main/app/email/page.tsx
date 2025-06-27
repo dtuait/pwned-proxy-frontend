@@ -1,7 +1,7 @@
 // app/page.tsx
 
 import type { Metadata } from "next";
-import AboutPage from "./about/page";
+import HomePage from "../components/HomePage";
 
 // (Optional) Next.js 13+ metadata
 // export const metadata: Metadata = {
@@ -10,5 +10,5 @@ import AboutPage from "./about/page";
 // };
 
 export default function Page() {
-  return <AboutPage />;
+  return <HomePage />;
 }
