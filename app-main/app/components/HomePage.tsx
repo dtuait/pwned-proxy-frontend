@@ -39,7 +39,7 @@ export default function HomePage() {
           setPasteCount(data.totalPastes);
         }
       } catch (err) {
-        console.error('Failed fetching stats', err);
+        console.log('Failed fetching stats', err);
       }
     };
     fetchStats();
