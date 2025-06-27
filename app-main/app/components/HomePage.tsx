@@ -23,6 +23,7 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [websiteCount, setWebsiteCount] = useState<number | null>(null);
   const [accountCount, setAccountCount] = useState<number | null>(null);
+  const [pasteCount, setPasteCount] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -34,6 +35,9 @@ export default function HomePage() {
         const data = await res.json();
         setWebsiteCount(data.totalWebsites);
         setAccountCount(data.totalAccounts);
+        if (typeof data.totalPastes === 'number') {
+          setPasteCount(data.totalPastes);
+        }
       } catch (err) {
         console.error('Failed fetching stats', err);
       }
@@ -335,7 +339,7 @@ return (
           {/* 3: Pink gradient */}
           <div className="bg-white rounded-xl p-6 text-center shadow">
             <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-700">
-              32
+              {pasteCount !== null ? pasteCount.toLocaleString() : '—'}
             </p>
             <p className="text-gray-600 mt-1">Pastes</p>
           </div>
