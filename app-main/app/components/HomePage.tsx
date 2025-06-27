@@ -212,7 +212,7 @@ return (
           <span className="text-gray-600"> Pwned?</span>
         </h1>
           <p className="text-lg text-gray-800 mb-8">
-            Check if your email address or phone number has been compromised in a data breach.
+            Check if your email address has been compromised in a data breach.
           </p>
 
           {/* Search bar */}
