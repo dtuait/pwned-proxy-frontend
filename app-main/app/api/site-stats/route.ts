@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     const breachesRes = await fetch('https://haveibeenpwned.com/api/v3/breaches', {
+
       headers: {
         'User-Agent': 'pwned-proxy-frontend',
       },
