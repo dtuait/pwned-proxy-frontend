@@ -1,3 +1,4 @@
+
 "use client";
 
 import PasswordChecker from "../components/password/PasswordChecker";
