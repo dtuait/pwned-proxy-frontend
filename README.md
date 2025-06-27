@@ -2,6 +2,12 @@
 
 ## Configuration
 
-Copy `.env.local.example` to `.env.local` and adjust `NEXT_PUBLIC_HIBP_PROXY_URL`
-if you wish to use a different API location. This variable is read by the
-start page and the header link so it also works when deployed with Coolify.
+Copy `.env.local.example` to `.env.local` and adjust the variables as needed.
+
+- `NEXT_PUBLIC_HIBP_PROXY_URL` sets the API location used by the start page and
+  header link.
+- `HIBP_API_KEY` provides the key required for server-side requests to the
+  Have I Been Pwned API.
+
+These variables ensure the application works locally and when deployed with
+Coolify.

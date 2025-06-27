@@ -2,11 +2,16 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const breachesRes = await fetch('https://haveibeenpwned.com/api/v3/breaches', {
+    const headers: Record<string, string> = {
+      'User-Agent': 'pwned-proxy-frontend',
+    };
 
-      headers: {
-        'User-Agent': 'pwned-proxy-frontend',
-      },
+    if (process.env.HIBP_API_KEY) {
+      headers['hibp-api-key'] = process.env.HIBP_API_KEY;
+    }
+
+    const breachesRes = await fetch('https://haveibeenpwned.com/api/v3/breaches', {
+      headers,
     });
     if (!breachesRes.ok) {
       return NextResponse.json(
@@ -31,9 +36,7 @@ export async function GET() {
 
     // Fetch paste statistics as well
     const pasteRes = await fetch('https://haveibeenpwned.com/api/v3/pastes', {
-      headers: {
-        'User-Agent': 'pwned-proxy-frontend',
-      },
+      headers,
     });
     if (!pasteRes.ok) {
       return NextResponse.json(
