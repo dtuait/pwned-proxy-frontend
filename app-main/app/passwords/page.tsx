@@ -1,7 +1,13 @@
+
+"use client";
+
+import PasswordChecker from "../components/password/PasswordChecker";
+
 export default function PasswordsPage() {
   return (
-    <main className="p-6 space-y-4">
+    <main className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">Password Breach Checking APIs: HIBP and Alternatives</h1>
+      <PasswordChecker />
       <p>
         Data breaches have exposed billions of passwords, putting users at risk of account takeover through credential stuffing and other attacks. Services like Have I Been Pwned (HIBP) allow users to verify if a password appears in known breach corpuses.
       </p>
