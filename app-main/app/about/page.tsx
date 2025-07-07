@@ -60,7 +60,7 @@ export default function AboutPage() {
         {/* Download Postman collection from public/haveibeenpwned.deic.dk.postman_collection_v2.json */}
         <div className="mt-8 flex justify-center">
           <a
-            href="/haveibeenpwned.deic.dk.postman_collection_v2.json"
+            href="/haveibeenpwned.cert.dk.postman_collection_v2.json"
             download
             className="block"
           >
