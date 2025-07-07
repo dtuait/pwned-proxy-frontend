@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
       process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
       'https://preview.api.haveibeenpwned.cert.dk';
     const response = await fetch(
-      `${baseUrl}/api/v3/breachedaccount/${encodeURIComponent(email)}/`,
+      `${baseUrl}/api/v3/breachedaccount/${encodeURIComponent(email)}/?includeUnverified=true`,
       {
         method: 'GET',
         headers: {
