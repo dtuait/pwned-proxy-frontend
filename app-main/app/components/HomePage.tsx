@@ -72,7 +72,7 @@ export default function HomePage() {
 
       const baseUrl = process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
         'https://preview.api.haveibeenpwned.cert.dk';
-      const apiUrl = `${baseUrl}/api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}/`;
+      const apiUrl = `${baseUrl}/api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}/?includeUnverified=true`;
       
       const response = await fetch(apiUrl, {
         method: 'GET',
