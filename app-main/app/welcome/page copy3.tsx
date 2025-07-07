@@ -104,7 +104,10 @@ export default function WelcomePage() {
         {/* Scrollable “window” box */}
         <div className="border border-gray-700 rounded overflow-auto h-80">
           <iframe
-            src="https://api.haveibeenpwned.security.ait.dtu.dk/"
+            src={
+              process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
+              'https://preview.api.haveibeenpwned.cert.dk/'
+            }
             title="Backend API Preview"
             className="w-full min-h-full"
           />
@@ -112,7 +115,10 @@ export default function WelcomePage() {
 
         {/* Click-out link */}
         <a
-          href="https://api.haveibeenpwned.security.ait.dtu.dk/"
+          href={
+            process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
+            'https://preview.api.haveibeenpwned.cert.dk/'
+          }
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block mt-2 text-[#9ece6a] hover:underline"

@@ -5,8 +5,11 @@ export async function POST(request: NextRequest) {
     const { email } = await request.json();
 
     // Server-side call to the Django API without requiring Authorization
+    const baseUrl =
+      process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
+      'https://preview.api.haveibeenpwned.cert.dk';
     const response = await fetch(
-      `https://api.haveibeenpwned.security.ait.dtu.dk/api/v3/breachedaccount/${encodeURIComponent(email)}/`,
+      `${baseUrl}/api/v3/breachedaccount/${encodeURIComponent(email)}/`,
       {
         method: 'GET',
         headers: {
