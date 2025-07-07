@@ -27,5 +27,5 @@ after changing environment variables.
 Set `NEXT_PUBLIC_CONTACT_EMAIL` in `.env.local` to display a contact address on the About page:
 
 ```bash
-NEXT_PUBLIC_CONTACT_EMAIL=itsecurity@dtu.dk
+NEXT_PUBLIC_CONTACT_EMAIL=cert@cert.dk
 ```
