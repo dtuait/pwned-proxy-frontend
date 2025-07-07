@@ -12,12 +12,40 @@ async function sha1(message: string): Promise<string> {
 
 export default function PasswordChecker() {
   const [password, setPassword] = useState("");
+  const [display, setDisplay] = useState("");
   const [result, setResult] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (loading) return;
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleCheck();
+    } else if (e.key === "Backspace") {
+      e.preventDefault();
+      setPassword((p) => p.slice(0, -1));
+      setDisplay((d) => d.slice(0, -1));
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      setPassword((p) => p + e.key);
+      setDisplay((d) => d + "\u2022");
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    if (loading) return;
+    const text = e.clipboardData.getData("text");
+    if (text) {
+      e.preventDefault();
+      setPassword((p) => p + text);
+      setDisplay((d) => d + "\u2022".repeat(text.length));
+    }
+  };
+
   const handleCheck = async () => {
     if (!password) return;
+    const original = password;
     setLoading(true);
     setError(null);
     setResult(null);
@@ -76,6 +104,8 @@ export default function PasswordChecker() {
       setError((err as Error).message || "Error checking password");
     } finally {
       setLoading(false);
+      setPassword("");
+      setDisplay("\u2022".repeat(original.length));
     }
   };
 
@@ -83,13 +113,17 @@ export default function PasswordChecker() {
     <div className="space-y-8">
       <div className="flex justify-center">
         <input
-          type="password"
+          type="text"
           placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleCheck()}
+          autoComplete="off"
+          name="password-check-text"
+          value={display}
+          readOnly
+          onKeyDown={handleInputKeyDown}
+          onPaste={handlePaste}
           className="w-full max-w-md p-4 rounded-l-lg border border-gray-300 text-black focus:outline-none focus:border-green-500"
           disabled={loading}
+          aria-label="Password"
         />
         <button
           onClick={handleCheck}
