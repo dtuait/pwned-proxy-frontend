@@ -105,7 +105,8 @@ export default function PasswordChecker() {
     } finally {
       setLoading(false);
       setPassword("");
-      setDisplay("\u2022".repeat(original.length));
+      // Clear the masked input after checking so users can easily enter a new password
+      setDisplay("");
     }
   };
 
