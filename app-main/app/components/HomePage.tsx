@@ -70,7 +70,9 @@ export default function HomePage() {
       console.log('=== DEBUG: Starting breach check ===');
       console.log('Email:', trimmedEmail);
 
-      const apiUrl = `https://api.haveibeenpwned.security.ait.dtu.dk/api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}/`;
+      const baseUrl = process.env.NEXT_PUBLIC_HIBP_PROXY_URL ||
+        'https://preview.api.haveibeenpwned.cert.dk';
+      const apiUrl = `${baseUrl}/api/v3/breachedaccount/${encodeURIComponent(trimmedEmail)}/`;
       
       const response = await fetch(apiUrl, {
         method: 'GET',
