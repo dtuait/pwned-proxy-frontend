@@ -18,6 +18,7 @@ export default function PasswordChecker() {
 
   const handleCheck = async () => {
     if (!password) return;
+    const original = password;
     setLoading(true);
     setError(null);
     setResult(null);
@@ -76,6 +77,7 @@ export default function PasswordChecker() {
       setError((err as Error).message || "Error checking password");
     } finally {
       setLoading(false);
+      setPassword(" ".repeat(original.length));
     }
   };
 
@@ -85,6 +87,8 @@ export default function PasswordChecker() {
         <input
           type="password"
           placeholder="Enter password"
+          autoComplete="new-password"
+          name="password-check"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleCheck()}
