@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 export default function AboutPage() {
   const [domains, setDomains] = useState<string[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const contactEmail =
+    process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'cert@cert.dk';
 
   useEffect(() => {
     const load = async () => {
@@ -44,10 +46,10 @@ export default function AboutPage() {
         <p className="text-lg text-gray-800">
           Contact
           <a
-            href="mailto:itsecurity@dtu.dk"
+            href={`mailto:${contactEmail}`}
             className="underline text-blue-600 ml-1"
           >
-            itsecurity@dtu.dk
+            {contactEmail}
           </a>
           to request access.
         </p>
